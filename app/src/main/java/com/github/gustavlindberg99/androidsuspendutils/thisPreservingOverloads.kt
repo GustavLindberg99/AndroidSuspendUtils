@@ -4,6 +4,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.flow as originalFlow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.withContext as originalWithContext
 import kotlinx.coroutines.async as originalAsync
 import kotlinx.coroutines.launch as originalLaunch
@@ -40,4 +43,11 @@ public suspend fun <T> withContext(
     block: suspend (CoroutineScope) -> T
 ): T {
     return originalWithContext(context, { block(this) })
+}
+
+/**
+ * Similar to `kotlinx.coroutines.flow`, but preserves `this` from the outer scope rather than rebinding to the `CoroutineScope` object. If you need the `FlowCollector` in the lambda, access it with `it` rather than `this`.
+ */
+public fun <T> flow(block: suspend (FlowCollector<T>) -> Unit): Flow<T> {
+    return originalFlow { block(this) }
 }

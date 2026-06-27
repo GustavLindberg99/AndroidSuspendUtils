@@ -21,7 +21,7 @@ And add the following to `app/build.gradle`:
 ```gradle
 dependencies {
     //...
-    implementation 'com.github.gustavlindberg99:androidsuspendutils:1.0.0'
+    implementation 'com.github.gustavlindberg99:androidsuspendutils:1.1.0'
 }
 ```
 
@@ -62,7 +62,7 @@ This library provides extension functions to various Android/Kotlin classes maki
 
     Similar to `View.setOnClickListener`, but allows the lambda parameter to be a suspend function, and starts a new coroutine for it when the view is clicked.
 
-    `view.setOnClickListenerAsync{...}` is synctactic sugar for `view.setOnClickListener{lifecycleScope.launch{...}}`.
+    `view.setOnClickListenerAsync{...}` is syntactic sugar for `view.setOnClickListener{lifecycleScope.launch{...}}`.
 
 - `suspend fun <T> Collection<T>.concurrentForEach(context: LifecycleOwner, limit: Int = Int.MAX_VALUE, action: suspend (T) -> Unit)`
 
@@ -113,11 +113,32 @@ This library provides extension functions to various Android/Kotlin classes maki
 
     For an example, see `launch` above.
 
+- `fun <T> flow(block: suspend (FlowCollector<T>) -> Unit): Flow<T>`
+
+    Similar to `kotlinx.coroutines.flow`, but preserves `this` from the outer scope rather than rebinding to the `CoroutineScope` object. If you need the `FlowCollector` in the lambda, access it with `it` rather than `this`.
+
+    Example:
+
+    ```kotlin
+    import com.github.gustavlindberg99.androidsuspendutils.flow    // Instead of kotlinx.coroutines.flow
+
+    flow {
+        // No need to write this@SomeActivity
+        Toast.makeText(this, "Hello World", Toast.LENGTH_SHORT).show()
+  
+        // Use `it.emit` to emit values
+        it.emit(1)
+        it.emit(2)
+    }
+    ```
+  
+    If you don't like this and just want to write `emit(...)` instead (even if it means writing `this@SomeActivity` when you need the activity), you can use the original `kotlinx.coroutines.flow` simply by importing `kotlinx.coroutines.flow` instead of `com.github.gustavlindberg99.androidsuspendutils.flow`. Of course this applies to the other `this`-preserving overloads as well.
+
 - `suspend fun <T : Closeable?, R> T.useWithContext(context: CoroutineContext, block: suspend (T) -> R): R`
 
     Executes the given block of code with the given context, and closes the input stream after the block is executed. Useful for input streams that read from the network.
 
-    `stream.useWithContext(context){...}` is synctactic sugar for `stream.use{withContext(context){...}}`.
+    `stream.useWithContext(context){...}` is syntactic sugar for `stream.use{withContext(context){...}}`.
 
 ### `SuspendableLauncher` class
 

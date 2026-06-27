@@ -8,6 +8,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.gustavlindberg99.androidsuspendutils.test.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.delay
@@ -73,6 +74,33 @@ class AsyncAlertDialogTest {
 
             // Assert that the result is false meaning the negative button was clicked
             assertFalse(resultDeferred.await())
+        }
+    }
+
+    @Test
+    fun testAsyncAlertDialogResourceId() = runBlocking {
+        ActivityScenario.launch(TestActivity::class.java).use { scenario ->
+            // Launch the async alert dialog
+            val resultDeferred = CompletableDeferred<Boolean>()
+            scenario.onActivity { activity ->
+                activity.lifecycleScope.launch(Dispatchers.Main.immediate) {
+                    val result = AlertDialog.Builder(activity)
+                        .setTitle("Test")
+                        .setMessage("Message")
+                        .showAsync(R.string.positive, R.string.negative)
+
+                    resultDeferred.complete(result)
+                }
+            }
+
+            // Delay to avoid race conditions
+            delay(200.milliseconds)
+
+            // Automatically click on the button
+            onView(withText("Positive")).perform(click())
+
+            // Assert that the result is true meaning the positive button was clicked
+            assertTrue(resultDeferred.await())
         }
     }
 }

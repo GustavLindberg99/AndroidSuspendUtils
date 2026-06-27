@@ -5,18 +5,18 @@
         <activity
             android:name="com.github.gustavlindberg99.androidsuspendutils.AsyncAlertDialogTest$TestActivity"
             android:exported="false"
-            android:theme="@style/Theme.AndroidSuspendUtils" />
+            android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar" />
         <activity
             android:name="com.github.gustavlindberg99.androidsuspendutils.AsyncListenersTest$TestActivity"
             android:exported="false"
-            android:theme="@style/Theme.AndroidSuspendUtils" />
+            android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar" />
         <activity
             android:name="com.github.gustavlindberg99.androidsuspendutils.SuspendableLauncherTest$TestActivity"
             android:exported="false"
-            android:theme="@style/Theme.AndroidSuspendUtils" />
+            android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar" />
         <activity
             android:name="com.github.gustavlindberg99.androidsuspendutils.SuspendableLauncherTest$LaunchableTestActivity"
             android:exported="false"
-            android:theme="@style/Theme.AndroidSuspendUtils" />
+            android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar" />
     </application>
 </manifest>
